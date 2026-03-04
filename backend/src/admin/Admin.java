@@ -41,16 +41,16 @@ public class Admin {
 		if(consultant == null) {
 			return false;
 		}
-		else if(consultant.name == "" || consultant.name == null){
+		else if(consultant.getName() == "" || consultant.getName() == null){
 			return false;
 		}
-		else if(consultant.email == "" || consultant.email == null){
+		else if(consultant.getEmail() == "" || consultant.getEmail() == null){
 			return false;
 		}
-		else if(!consultant.email.contains("@")) {
+		else if(!consultant.getEmail().contains("@")) {
 			return false;
 		}
-		else if(consultant.status == "" || consultant.status == null){
+		else if(consultant.getStatus() == "" || consultant.getStatus() == null){
 			return false;
 		}
 		else {
@@ -60,3 +60,4 @@ public class Admin {
 		
 	}
 }
+
