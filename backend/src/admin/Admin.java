@@ -39,25 +39,32 @@ public class Admin {
 	 */
 	public boolean reviewConsultant(Consultant consultant) {
 		if(consultant == null) {
+			System.out.println("Consultant not approved");
 			return false;
 		}
 		else if(consultant.getName() == "" || consultant.getName() == null){
+			System.out.println("Consultant not approved");
 			return false;
 		}
 		else if(consultant.getEmail() == "" || consultant.getEmail() == null){
+			System.out.println("Consultant not approved");
 			return false;
 		}
 		else if(!consultant.getEmail().contains("@")) {
+			System.out.println("Consultant not approved");
 			return false;
 		}
 		else if(consultant.getStatus() == "" || consultant.getStatus() == null){
+			System.out.println("Consultant not approved");
 			return false;
 		}
 		else {
+			System.out.println("Consultant approved");
 			return true;
 		}
 		
 		
 	}
 }
+
 
