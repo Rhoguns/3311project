@@ -3,6 +3,7 @@ package consultant;
 import java.util.ArrayList;
 import java.util.List;
 
+import admin.Admin;
 import booking.Booking;
 import booking.state.ConfirmedState;
 import booking.state.RejectedState;
@@ -23,12 +24,21 @@ public class Consultant {
         this.email = email;
         this.status = "PENDING";
         this.availabilitySlots = new ArrayList<>();
+        register();
     }
 
 
     // Register consultant
     public void register() {
-        this.status = "PENDING";
+        boolean approved = Admin.getInstance().reviewConsultant(this);
+    	if(approved) {
+    		System.out.println("APPROVED");
+    		this.status = "APPROVED";
+    	}
+    	else {
+    		System.out.println("REJECTED");
+    		this.status = "REJECTED";
+    	}
     }
 
     // Manage availability
@@ -42,14 +52,24 @@ public class Consultant {
 
     // Booking Actions
     public void acceptBooking(Booking booking) {
+        if(booking == null) {
+    		return;
+    	}
         booking.setState(new ConfirmedState());
+        booking.setState(new PendingPaymentState());
     }
 
     public void rejectBooking(Booking booking) {
+        if(booking == null) {
+    		return;
+    	}
         booking.setState(new RejectedState());
     }
 
     public void completeBooking(Booking booking) {
+        if(booking == null) {
+    		return;
+    	}
         booking.setState(new CompletedState());
     }
 
