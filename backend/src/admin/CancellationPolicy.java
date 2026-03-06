@@ -1,12 +1,15 @@
 package admin;
 
 public class CancellationPolicy {
-	private int cancellationWindowTime;
+	private ArrayList<BookingState> finalStates;
 	
 	private static final CancellationPolicy instance = new CancellationPolicy();
 	
 	private CancellationPolicy() {
-		this.cancellationWindowTime = 0;
+		finalStates = new ArrayList<>();
+		finalStates.add(new CompletedState());
+		finalStates.add(new CancelledState());
+		finalStates.add(new RejectedState());
 	}
 	
 	public static CancellationPolicy getInstance() {
@@ -14,25 +17,30 @@ public class CancellationPolicy {
 	}
 	
 	/**
-	 * Return the cancellation window time of the policy.
-	 * @return the integer representing the policy's cancellation window time
+	 * Return the policy's states that don't allow cancellation.
+	 * @return the ArrayList<BookingState> representing the states that the policy prohibits cancellations in.
 	 */
-	public int getCancellationPolicy() {
-		return this.cancellationWindowTime;
+	public ArrayList<BookingState> getCancellationPolicy() {
+		return this.finalStates;
 	}
 	/**
 	 * Change the value of this policy with the passed parameter
-	 * @param time 	The integer value that the policy's variable will be set to
+	 * @param newStates 	The ArrayList<BookingState> value that the policy's variable will be set to
 	 */
-	private void change(int time) {
-		this.cancellationWindowTime = time;
+	private void change(ArrayList<BookingState> newStates) {
+		this.finalStates.clear();
+		for(int i = 0; i < newStates.size(); i++) {
+			this.finalStates.add(newStates.get(i));
+		}
+		System.out.println("Cancellation Policy changed.");
 	}
 	
 	/**
 	 * Invoke the method to change this policy's variable with the given parameter
-	 * @param time 	The integer value that the policy's variable will be set to
+	 * @param newStates 	The ArrayList<BookingState> value that the policy's variable will be set to
 	 */
-	public void applyChange(int time) {
-		change(time);
+	public void applyChange(ArrayList<BookingState> newStates) {
+		change(newStates);
 	}
 }
+
