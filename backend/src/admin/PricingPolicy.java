@@ -38,6 +38,7 @@ public class PricingPolicy {
 	private void change(double newMin, double newMax) {
 		this.minPrice = newMin;
 		this.maxPrice = newMax;
+		System.out.println("Pricing Policy changed. Minimum price: $" + newMin + ". Maximum price: $" + newMax + ".");
 	}
 	/**
 	 * Invoke the method to change this policy's variable with the given parameter
@@ -48,3 +49,4 @@ public class PricingPolicy {
 		change(newMin, newMax);
 	}
 }
+
