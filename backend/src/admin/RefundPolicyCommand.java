@@ -2,16 +2,17 @@ package admin;
 
 public class RefundPolicyCommand implements PolicyCommand{
 	private RefundPolicy policy;
-	private int newRefundWindowTime;
+	private String newState;
 	
-	public RefundPolicyCommand(RefundPolicy policy, int refundWindowTime) {
+	public RefundPolicyCommand(RefundPolicy policy, String acceptedState) {
 		this.policy = policy;
-		this.newRefundWindowTime = refundWindowTime;
+		this.newState = acceptedState;
 	}
 	
 	@Override
 	public boolean update() {
-		policy.applyChange(newRefundWindowTime);
+		policy.applyChange(newState);
 		return true;
 	}
 }
+
