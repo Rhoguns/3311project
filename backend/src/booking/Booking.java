@@ -1,71 +1,86 @@
 package booking;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import admin.CancellationPolicy;
+import booking.model.Client;
+import booking.model.Service;
 import booking.state.BookingState;
 import booking.state.CancelledState;
 import booking.state.RequestedState;
+import consultant.AvailabilitySlot;
+import consultant.Consultant;
 
 /**
  * Booking class that represents a booking in the system.
- * It uses the State design pattern to manage its lifecycle states
- * (Requested, Confirmed, Completed, Rejected, Cancelled).
+ * It uses the State design pattern to manage its lifecycle states.
  */
 public class Booking {
 
     private String bookingId;
     private double totalAmount;
     private BookingState currentState;
+    private Client client;
+    private Consultant consultant;
+    private Service service;
+    private AvailabilitySlot slot;
+    private LocalDateTime createdAt;
 
-    public Booking(String bookingId, double totalAmount) {
+    public Booking(String bookingId, double totalAmount, Client client,
+            Consultant consultant, Service service, AvailabilitySlot slot) {
         this.bookingId = bookingId;
         this.totalAmount = totalAmount;
-        this.currentState = new RequestedState(); 
+        this.currentState = new RequestedState();
+        this.client = client;
+        this.consultant = consultant;
+        this.service = service;
+        this.slot = slot;
+        this.createdAt = LocalDateTime.now();
     }
 
-
-    /**
-     * Set the current state of this booking.
-     *
-     * @param state the new BookingState
-     */
     public void setState(BookingState state) {
         this.currentState = state;
     }
 
-    /**
-     * @return the current BookingState
-     */
     public BookingState getState() {
         return currentState;
     }
 
-        /**
-        * Proceed to the next state based on the current state logic.
-        * This method is typically called by the BookingService to advance
-        * the booking through its lifecycle.
-        */
-        
     public void proceed() {
         currentState.handle(this);
     }
 
     /**
-     * Cancel the booking (transitions to CancelledState).
-     * Only allowed if the booking is not already in a terminal state
-     * (Completed, Rejected, or Cancelled).
+     * Cancel the booking if it is allowed by both lifecycle state and configured policy.
      */
     public void cancel() {
         String stateName = currentState.toString();
-        if (stateName.equals("COMPLETED") || stateName.equals("REJECTED")
-                || stateName.equals("CANCELLED")) {
+        ArrayList<BookingState> terminalStates = CancellationPolicy.getInstance().getCancellationPolicy();
+        for (int i = 0; i < terminalStates.size(); i++) {
+            if (stateName.equals(terminalStates.get(i).toString())) {
+                System.out.println("Booking " + bookingId
+                        + ": Cannot cancel — already in terminal state " + stateName + ".");
+                return;
+            }
+        }
+
+        if (!CancellationPolicy.getInstance().canCancel(this)) {
             System.out.println("Booking " + bookingId
-                    + ": Cannot cancel — already in terminal state " + stateName + ".");
+                    + ": Cannot cancel — booking is inside the configured cancellation window.");
             return;
         }
+
         System.out.println("Booking " + bookingId + ": Cancelling from " + stateName + ".");
         setState(new CancelledState());
+        releaseSlot();
     }
 
-    
+    public void releaseSlot() {
+        if (slot != null) {
+            slot.markAvailable();
+        }
+    }
 
     public String getBookingId() {
         return bookingId;
@@ -83,9 +98,33 @@ public class Booking {
         this.totalAmount = totalAmount;
     }
 
+    public Client getClient() {
+        return client;
+    }
+
+    public Consultant getConsultant() {
+        return consultant;
+    }
+
+    public Service getService() {
+        return service;
+    }
+
+    public AvailabilitySlot getSlot() {
+        return slot;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     @Override
     public String toString() {
-        return "Booking{id='" + bookingId + "', amount=" + totalAmount
+        return "Booking{id='" + bookingId + "', client=" + client.getName()
+                + ", consultant=" + consultant.getName()
+                + ", service=" + service.getName()
+                + ", slot=" + slot.getSlotId()
+                + ", amount=" + totalAmount
                 + ", state=" + currentState + '}';
     }
 }

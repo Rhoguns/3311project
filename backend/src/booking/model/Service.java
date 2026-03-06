@@ -1,18 +1,32 @@
 package booking.model;
 
+import admin.PricingPolicy;
+
 /**
- * Represents a service that can be booked.
+ * Represents a consulting service that can be booked.
  */
 public class Service {
 
     private String serviceId;
     private String name;
+    private int durationMinutes;
     private double price;
 
     public Service(String serviceId, String name, double price) {
+        this(serviceId, name, 60, price);
+    }
+
+    public Service(String serviceId, String name, int durationMinutes, double price) {
         this.serviceId = serviceId;
         this.name = name;
-        this.price = price;
+        this.durationMinutes = durationMinutes;
+        if (price < PricingPolicy.getInstance().getMinPrice()) {
+            this.price = PricingPolicy.getInstance().getMinPrice();
+        } else if (price > PricingPolicy.getInstance().getMaxPrice()) {
+            this.price = PricingPolicy.getInstance().getMaxPrice();
+        } else {
+            this.price = price;
+        }
     }
 
     public String getServiceId() {
@@ -23,12 +37,17 @@ public class Service {
         return name;
     }
 
+    public int getDurationMinutes() {
+        return durationMinutes;
+    }
+
     public double getPrice() {
         return price;
     }
 
     @Override
     public String toString() {
-        return "Service{id='" + serviceId + "', name='" + name + "', price=" + price + '}';
+        return "Service{id='" + serviceId + "', name='" + name + "', durationMinutes="
+                + durationMinutes + ", price=" + price + '}';
     }
 }
