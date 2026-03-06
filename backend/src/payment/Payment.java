@@ -1,5 +1,6 @@
 package payment;
 
+import admin.RefundPolicy;
 import booking.Booking;
 import booking.state.PaidState;
 import java.time.LocalDateTime;
@@ -68,6 +69,10 @@ public class Payment {
 
     // process payment
     public static Payment processPayment(Booking booking, PaymentMethod paymentMethod) {
+        if(booking == null) {
+            throw new IllegalStateException("Booking does not exist (null value), cannot process payment");
+        }
+        
         String stateName = booking.getState().toString();
         if (!"PENDING_PAYMENT".equals(stateName)) {
             throw new IllegalStateException("Booking " + booking.getBookingId()
@@ -101,9 +106,10 @@ public class Payment {
     // process refund for only successful transactions
     public static Payment processRefund(String transactionId, PaymentMethod paymentMethod) {
         Payment payment = getPaymentByTransactionId(transactionId);
-        if (!"SUCCESSFUL".equals(payment.getStateName())) {
+        if(!payment.getStateName().equals(RefundPolicy.getInstance().getRefundPolicy())) { //New
             throw new IllegalStateException("Can only refund SUCCESSFUL payments. Current: " + payment.getStateName());
         }
+
         boolean refunded = paymentMethod.processRefund(transactionId, payment.getAmount());
         if (refunded) {
             payment.refund();
