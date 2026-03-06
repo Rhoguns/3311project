@@ -53,24 +53,36 @@ public class Consultant {
 
     // Booking Actions
     public void acceptBooking(Booking booking) {
-        if(booking == null) {
-    		return;
+        if(!status.equals("APPROVED")) {
+        	throw new IllegalStateException(
+                    "Consultant " + name + " is not approved and cannot reject bookings.");
     	}
-        booking.setState(new ConfirmedState());
-        booking.setState(new PendingPaymentState());
+        if (booking == null) {
+            return;
+        }
+        booking.proceed();
+        booking.proceed();
     }
 
     public void rejectBooking(Booking booking) {
-        if(booking == null) {
-    		return;
+    	if(!status.equals("APPROVED")) {
+        	throw new IllegalStateException(
+                    "Consultant " + name + " is not approved and cannot reject bookings.");
     	}
+    	if (booking == null) {
+            return;
+        }
         booking.setState(new RejectedState());
     }
 
     public void completeBooking(Booking booking) {
-        if(booking == null) {
-    		return;
+    	if(!status.equals("APPROVED")) {
+        	throw new IllegalStateException(
+                    "Consultant " + name + " is not approved and cannot reject bookings.");
     	}
+    	if (booking == null) {
+            return;
+        }
         booking.setState(new CompletedState());
     }
 
