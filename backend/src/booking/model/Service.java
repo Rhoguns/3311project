@@ -20,13 +20,7 @@ public class Service {
         this.serviceId = serviceId;
         this.name = name;
         this.durationMinutes = durationMinutes;
-        if (price < PricingPolicy.getInstance().getMinPrice()) {
-            this.price = PricingPolicy.getInstance().getMinPrice();
-        } else if (price > PricingPolicy.getInstance().getMaxPrice()) {
-            this.price = PricingPolicy.getInstance().getMaxPrice();
-        } else {
-            this.price = price;
-        }
+        setPrice(price);
     }
 
     public String getServiceId() {
@@ -43,6 +37,16 @@ public class Service {
 
     public double getPrice() {
         return price;
+    }
+
+    public void setPrice(double requestedPrice) {
+        if (requestedPrice < PricingPolicy.getInstance().getMinPrice()) {
+            this.price = PricingPolicy.getInstance().getMinPrice();
+        } else if (requestedPrice > PricingPolicy.getInstance().getMaxPrice()) {
+            this.price = PricingPolicy.getInstance().getMaxPrice();
+        } else {
+            this.price = requestedPrice;
+        }
     }
 
     @Override
