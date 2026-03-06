@@ -3,19 +3,17 @@ package consultant;
 import java.util.ArrayList;
 import java.util.List;
 
-import admin.Admin;
+import admin.NotificationPolicy;
 import booking.Booking;
-import booking.state.ConfirmedState;
-import booking.state.PendingPaymentState;
-import booking.state.RejectedState;
 import booking.state.CompletedState;
+import booking.state.RejectedState;
 
 public class Consultant {
 
     private String consultantId;
     private String name;
     private String email;
-    private String status;  
+    private String status;
 
     private List<AvailabilitySlot> availabilitySlots;
 
@@ -25,24 +23,8 @@ public class Consultant {
         this.email = email;
         this.status = "PENDING";
         this.availabilitySlots = new ArrayList<>();
-        register();
     }
 
-
-    // Register consultant
-    public void register() {
-        boolean approved = Admin.getInstance().reviewConsultant(this);
-    	if(approved) {
-    		System.out.println("APPROVED");
-    		this.status = "APPROVED";
-    	}
-    	else {
-    		System.out.println("REJECTED");
-    		this.status = "REJECTED";
-    	}
-    }
-
-    // Manage availability
     public void manageAvailability(List<AvailabilitySlot> slots) {
         this.availabilitySlots = slots;
     }
@@ -51,43 +33,67 @@ public class Consultant {
         this.availabilitySlots.add(slot);
     }
 
-    // Booking Actions
-  public void acceptBooking(Booking booking) {
-        if(!status.equals("APPROVED")) {
-            throw new IllegalStateException(
-                    "Consultant " + name + " is not approved and cannot accept bookings.");
+    public AvailabilitySlot findAvailableSlot(String slotId) {
+        for (AvailabilitySlot slot : availabilitySlots) {
+            if (slot.getSlotId().equals(slotId) && slot.isAvailable()) {
+                return slot;
+            }
         }
+        return null;
+    }
+
+    public void acceptBooking(Booking booking) {
+        ensureApproved("accept");
         if (booking == null) {
             return;
         }
-        booking.proceed(); //RequestedState to ConfirmedState
-        booking.proceed(); //ConfirmedState to PendingPaymentState
+        if (!"REQUESTED".equals(booking.getState().toString())) {
+            throw new IllegalStateException("Only REQUESTED bookings can be accepted.");
+        }
+        booking.proceed();
+        booking.proceed();
+        if (NotificationPolicy.getInstance().getNotificationPolicy()) {
+            System.out.println("[Notification] Booking " + booking.getBookingId() + " confirmed and awaiting payment.");
+        }
     }
 
     public void rejectBooking(Booking booking) {
-        if(!status.equals("APPROVED")) {
-            throw new IllegalStateException(
-                    "Consultant " + name + " is not approved and cannot reject bookings.");
-        }
+        ensureApproved("reject");
         if (booking == null) {
             return;
+        }
+        if (!"REQUESTED".equals(booking.getState().toString())) {
+            throw new IllegalStateException("Only REQUESTED bookings can be rejected.");
         }
         System.out.println("Consultant " + this.name + " has rejected the booking: " + booking.getBookingId());
         booking.setState(new RejectedState());
+        booking.releaseSlot();
+        if (NotificationPolicy.getInstance().getNotificationPolicy()) {
+            System.out.println("[Notification] Client notified that booking " + booking.getBookingId() + " was rejected.");
+        }
     }
 
     public void completeBooking(Booking booking) {
-        if(!status.equals("APPROVED")) {
-            throw new IllegalStateException(
-                    "Consultant " + name + " is not approved and cannot complete bookings.");
-        }
+        ensureApproved("complete");
         if (booking == null) {
             return;
         }
+        if (!"PAID".equals(booking.getState().toString())) {
+            throw new IllegalStateException("A booking can only be completed after payment is processed.");
+        }
         booking.setState(new CompletedState());
+        if (NotificationPolicy.getInstance().getNotificationPolicy()) {
+            System.out.println("[Notification] Booking " + booking.getBookingId() + " marked as completed.");
+        }
     }
-    
-    // Getters
+
+    private void ensureApproved(String action) {
+        if (!status.equals("APPROVED")) {
+            throw new IllegalStateException(
+                    "Consultant " + name + " is not approved and cannot " + action + " bookings.");
+        }
+    }
+
     public String getConsultantId() {
         return consultantId;
     }
@@ -102,6 +108,10 @@ public class Consultant {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<AvailabilitySlot> getAvailabilitySlots() {
