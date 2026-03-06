@@ -62,10 +62,38 @@ public class Admin {
 			System.out.println("Consultant approved");
 			return true;
 		}
-		
-		
 	}
+
+	/**
+     * Approves a consultant registration after validation.
+     *
+     * @param consultant consultant to approve
+     * @return true if approved
+     */
+    public boolean approveConsultantRegistration(Consultant consultant) {
+        boolean approved = reviewConsultant(consultant);
+        if (approved) {
+            consultant.setStatus("APPROVED");
+            System.out.println("Consultant approved");
+        }
+        return approved;
+    }
+
+    /**
+     * Rejects a consultant registration.
+     *
+     * @param consultant consultant to reject
+     */
+    public void rejectConsultantRegistration(Consultant consultant) {
+        if (consultant == null) {
+            throw new IllegalArgumentException("Consultant cannot be null.");
+        }
+        consultant.setStatus("REJECTED");
+        System.out.println("Consultant rejected");
+    }
+	
 }
+
 
 
 
