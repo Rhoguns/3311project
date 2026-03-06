@@ -1,12 +1,12 @@
 package admin;
 
 public class RefundPolicy {
-	private int refundWindowTime;
+	private String acceptedState;
 	
 	private static final RefundPolicy instance = new RefundPolicy();
 	
 	private RefundPolicy() {
-		this.refundWindowTime = 0;
+		this.acceptedState = "SUCCESSFUL";
 	}
 	
 	public static RefundPolicy getInstance() {
@@ -15,25 +15,26 @@ public class RefundPolicy {
 	
 	/**
 	 * Get the refund window time in days the policy enforces.
-	 * @return the integer value representing the number of days the refund window lasts
+	 * @return the String value representing the number of days the refund window lasts
 	 */
-	public int getRefundPolicy() {
-		return this.refundWindowTime;
+	public String getRefundPolicy() {
+		return this.acceptedState;
 	}
 	
 	/**
 	 * Change the value of this policy with the passed parameter
-	 * @param time 	The integer value that the policy's variable will be set to
+	 * @param state 	The String value that the policy's variable will be set to
 	 */
-	private void change(int time) {
-		this.refundWindowTime = time;
+	private void change(String state) {
+		this.acceptedState = state;
 	}
 	
 	/**
 	 * Invoke the method to change this policy's variable with the given parameter
-	 * @param time 	The integer value that the policy's variable will be set to
+	 * @param state 	The String value that the policy's variable will be set to
 	 */
-	public void applyChange(int time) {
-		change(time);
+	public void applyChange(String state) {
+		change(state);
 	}
 }
+
