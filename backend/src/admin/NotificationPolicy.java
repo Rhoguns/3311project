@@ -26,6 +26,7 @@ public class NotificationPolicy {
 	 */
 	private void change(boolean enable) {
 		this.enableNotifications = enable;
+		System.out.println("Notification Policy changed.");
 	}
 	
 	/**
@@ -36,3 +37,4 @@ public class NotificationPolicy {
 		change(enable);
 	}
 }
+
