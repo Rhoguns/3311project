@@ -27,7 +27,7 @@ public class RefundPolicy {
 	 */
 	private void change(String state) {
 		this.acceptedState = state;
-		System.out.println("Refund Policy changed.")
+		System.out.println("Refund Policy changed.");
 	}
 	
 	/**
@@ -38,5 +38,6 @@ public class RefundPolicy {
 		change(state);
 	}
 }
+
 
 
