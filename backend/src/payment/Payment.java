@@ -1,5 +1,6 @@
 package payment;
 
+import admin.NotificationPolicy;
 import admin.RefundPolicy;
 import booking.Booking;
 import booking.state.PaidState;
@@ -12,7 +13,6 @@ import payment.state.PaymentState;
 
 /**
  * Payment record with State Pattern lifecycle and static processing methods.
- * Composition: PaymentState (state pattern) + PaymentMethod (payment method).
  */
 public class Payment {
 
@@ -41,7 +41,6 @@ public class Payment {
         this.description = "";
     }
 
-    // ── State transitions ──
     public void setState(PaymentState state) {
         this.state = state;
         this.updatedAt = LocalDateTime.now();
@@ -67,46 +66,42 @@ public class Payment {
         state.refund(this);
     }
 
-    // process payment
     public static Payment processPayment(Booking booking, PaymentMethod paymentMethod) {
-        if(booking == null) {
+        if (booking == null) {
             throw new IllegalStateException("Booking does not exist (null value), cannot process payment");
         }
-        
+
         String stateName = booking.getState().toString();
         if (!"PENDING_PAYMENT".equals(stateName)) {
             throw new IllegalStateException("Booking " + booking.getBookingId()
                     + " is in state " + stateName + ". Must be PENDING_PAYMENT.");
         }
 
-        // Validate payment method
         System.out.println("\n[Payment] Validating payment method...");
         paymentMethod.validate();
         System.out.println("[Payment] Validated: " + paymentMethod.getMaskedDetails());
 
-        // Process payment (simulated delay + transaction ID)
+        Payment payment = new Payment("PENDING-" + booking.getBookingId(), booking.getBookingId(),
+                paymentMethod.getClientId(), booking.getTotalAmount(), paymentMethod);
+        payment.setDescription("Payment for booking " + booking.getBookingId());
+        allPayments.add(payment);
+
         System.out.println("[Payment] Processing $" + String.format("%.2f", booking.getTotalAmount()) + "...");
         String transactionId = paymentMethod.processPayment(booking.getTotalAmount());
 
-        Payment payment = new Payment(transactionId, booking.getBookingId(),
-                paymentMethod.getClientId(), booking.getTotalAmount(), paymentMethod);
-        payment.setDescription("Payment for booking " + booking.getBookingId());
+        payment.transactionId = transactionId;
         payment.markSuccess();
-        allPayments.add(payment);
 
-        // update booking state
         booking.setState(new PaidState());
         System.out.println("[Payment] Booking " + booking.getBookingId() + " -> PAID.");
 
-        // send payment confirmation
         sendPaymentConfirmation(payment);
         return payment;
     }
 
-    // process refund for only successful transactions
     public static Payment processRefund(String transactionId, PaymentMethod paymentMethod) {
         Payment payment = getPaymentByTransactionId(transactionId);
-        if(!payment.getStateName().equals(RefundPolicy.getInstance().getRefundPolicy())) { //New
+        if (!payment.getStateName().equals(RefundPolicy.getInstance().getRefundPolicy())) {
             throw new IllegalStateException("Can only refund SUCCESSFUL payments. Current: " + payment.getStateName());
         }
 
@@ -119,7 +114,6 @@ public class Payment {
         return payment;
     }
 
-    // get payment history
     public static List<Payment> getPaymentHistory(String clientId) {
         List<Payment> result = new ArrayList<>();
         for (Payment payment : allPayments) {
@@ -130,7 +124,6 @@ public class Payment {
         return result;
     }
 
-    // get all payments by state
     public static List<Payment> getPaymentsByState(String clientId, String stateName) {
         List<Payment> result = new ArrayList<>();
         for (Payment payment : allPayments) {
@@ -142,7 +135,6 @@ public class Payment {
         return result;
     }
 
-    // get all payments by transactionID
     public static Payment getPaymentByTransactionId(String transactionId) {
         for (Payment payment : allPayments) {
             if (payment.getTransactionId().equals(transactionId)) {
@@ -152,7 +144,6 @@ public class Payment {
         throw new IllegalArgumentException("Payment not found: " + transactionId);
     }
 
-    // clear all history of payments
     public static void clearHistory() {
         allPayments.clear();
     }
@@ -204,13 +195,15 @@ public class Payment {
     }
 
     private static void sendPaymentConfirmation(Payment payment) {
-        System.out.println("\n===== PAYMENT CONFIRMATION =====");
-        System.out.println("Transaction ID: " + payment.getTransactionId());
-        System.out.println("Booking ID:     " + payment.getBookingId());
-        System.out.println("Amount:         $" + String.format("%.2f", payment.getAmount()));
-        System.out.println("State:          " + payment.getStateName());
-        System.out.println("Method:         " + payment.getPaymentMethod().getType());
-        System.out.println("Date:           " + payment.getCreatedAt());
-        System.out.println("================================\n");
+        if (NotificationPolicy.getInstance().getNotificationPolicy()) {
+            System.out.println("\n===== PAYMENT CONFIRMATION =====");
+            System.out.println("Transaction ID: " + payment.getTransactionId());
+            System.out.println("Booking ID:     " + payment.getBookingId());
+            System.out.println("Amount:         $" + String.format("%.2f", payment.getAmount()));
+            System.out.println("State:          " + payment.getStateName());
+            System.out.println("Method:         " + payment.getPaymentMethod().getType());
+            System.out.println("Date:           " + payment.getCreatedAt());
+            System.out.println("================================\n");
+        }
     }
 }
