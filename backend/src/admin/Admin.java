@@ -42,11 +42,11 @@ public class Admin {
 			System.out.println("Consultant not approved");
 			return false;
 		}
-		else if(consultant.getName() == "" || consultant.getName() == null){
+		else if(consultant.getName().equals("") || consultant.getName() == null){
 			System.out.println("Consultant not approved");
 			return false;
 		}
-		else if(consultant.getEmail() == "" || consultant.getEmail() == null){
+		else if(consultant.getEmail().equals("") || consultant.getEmail() == null){
 			System.out.println("Consultant not approved");
 			return false;
 		}
@@ -54,7 +54,7 @@ public class Admin {
 			System.out.println("Consultant not approved");
 			return false;
 		}
-		else if(consultant.getStatus() == "" || consultant.getStatus() == null){
+		else if(consultant.getStatus().equals("") || consultant.getStatus() == null){
 			System.out.println("Consultant not approved");
 			return false;
 		}
@@ -66,5 +66,6 @@ public class Admin {
 		
 	}
 }
+
 
 
