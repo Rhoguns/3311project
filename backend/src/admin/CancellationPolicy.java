@@ -51,7 +51,6 @@ public class CancellationPolicy {
 		for(int i = 0; i < newStates.size(); i++) {
 			this.finalStates.add(newStates.get(i));
 		}
-		System.out.println("Cancellation Policy changed.");
 	}
 	
 	/**
@@ -70,5 +69,6 @@ public class CancellationPolicy {
         System.out.println("Cancellation time window changed to " + minimumHoursBeforeStart + " hours before start.");
     }
 }
+
 
 
