@@ -52,40 +52,40 @@ public class Consultant {
     }
 
     // Booking Actions
-    public void acceptBooking(Booking booking) {
+  public void acceptBooking(Booking booking) {
         if(!status.equals("APPROVED")) {
-        	throw new IllegalStateException(
-                    "Consultant " + name + " is not approved and cannot reject bookings.");
-    	}
+            throw new IllegalStateException(
+                    "Consultant " + name + " is not approved and cannot accept bookings.");
+        }
         if (booking == null) {
             return;
         }
-        booking.proceed();
-        booking.proceed();
+        booking.proceed(); //RequestedState to ConfirmedState
+        booking.proceed(); //ConfirmedState to PendingPaymentState
     }
 
     public void rejectBooking(Booking booking) {
-    	if(!status.equals("APPROVED")) {
-        	throw new IllegalStateException(
+        if(!status.equals("APPROVED")) {
+            throw new IllegalStateException(
                     "Consultant " + name + " is not approved and cannot reject bookings.");
-    	}
-    	if (booking == null) {
+        }
+        if (booking == null) {
             return;
         }
+        System.out.println("Consultant " + this.name + " has rejected the booking: " + booking.getBookingId());
         booking.setState(new RejectedState());
     }
 
     public void completeBooking(Booking booking) {
-    	if(!status.equals("APPROVED")) {
-        	throw new IllegalStateException(
-                    "Consultant " + name + " is not approved and cannot reject bookings.");
-    	}
-    	if (booking == null) {
+        if(!status.equals("APPROVED")) {
+            throw new IllegalStateException(
+                    "Consultant " + name + " is not approved and cannot complete bookings.");
+        }
+        if (booking == null) {
             return;
         }
         booking.setState(new CompletedState());
     }
-
     
     // Getters
     public String getConsultantId() {
