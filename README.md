@@ -3,14 +3,14 @@
 GitHub repository: https://github.com/Rhoguns/3311project
 
 ## Architecture overview
-This project is a Java-based backend for a consulting and booking system. The code is organized by feature/module:
+This project is a Java backend for a consulting and booking system. The code is organized by feature and actor
 
-- `admin/` — system-wide policy configuration
-- `booking/` — booking logic and booking lifecycle
-- `consultant/` — consultant profiles and availability slots
-- `payment/` — payment processing and payment states
+- `admin` folder — system-wide policy configuration
+- `booking` folder — booking logic and booking lifecycle
+- `consultant` folder — consultant profiles and availability slots
+- `payment` folder — payment processing and payment states
 
-The architecture is modular and object-oriented, with each package responsible for a specific part of the system.
+The architecture is modular and object-oriented with each package responsible for a specific subsystem
 
 ## Design patterns used
 - **Singleton Pattern**
@@ -22,7 +22,7 @@ The architecture is modular and object-oriented, with each package responsible f
     - `RefundPolicy.java`
 
 - **Command Pattern**
-  - Used for updating/administering system policies
+  - Used for updating system policies
   - Implemented through:
     - `PolicyCommand.java`
     - `CancellationPolicyCommand.java`
@@ -46,4 +46,4 @@ The architecture is modular and object-oriented, with each package responsible f
     - `PaymentRefundedState`
 
 ## How to run the application
-From the project root, compile and run the test/demo file in `backend/src`:
+From the project root, compile and run the test file in `backend/src`:
