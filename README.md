@@ -49,14 +49,14 @@ The architecture is modular and object-oriented with each package responsible fo
 From the project root, compile and run the test file in `backend/src`:
 
 ## Team member contributions
-- **Hasan Kerret** — GitHub: `lalogongum`  
+- **Hasan Kerret** GitHub: `lalogongum`  
   Contributed to the consultant subsystem and the consultant diagram.
 
-- **Justin Fera** — GitHub: `Justin1374`  
+- **Justin Fera** GitHub: `Justin1374`  
   Contributed to the admin subsystem and the admin diagram.
 
-- **Anh Tu Le** — GitHub: `TuLe12` (York account) / `tim96121204` (personal local account)  
+- **Anh Tu Le** GitHub: `TuLe12` (York account) / `tim96121204` (personal local account)  
   Contributed to the payment subsystem, payment diagrams, and test file.
 
-- **Philips Rhoguns** — GitHub: `Rhoguns`  
+- **Philips Rhoguns** GitHub: `Rhoguns`  
   Contributed to the booking subsystem, booking diagrams and compiling the individual diagrams into one.
