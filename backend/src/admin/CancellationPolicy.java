@@ -1,5 +1,13 @@
 package admin;
 
+import java.util.ArrayList;
+
+import booking.Booking;
+import booking.state.BookingState;
+import booking.state.CancelledState;
+import booking.state.CompletedState;
+import booking.state.RejectedState;
+
 public class CancellationPolicy {
 	private ArrayList<BookingState> finalStates;
 	private int minimumHoursBeforeStart;
@@ -69,6 +77,7 @@ public class CancellationPolicy {
         System.out.println("Cancellation time window changed to " + minimumHoursBeforeStart + " hours before start.");
     }
 }
+
 
 
 
