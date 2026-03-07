@@ -69,6 +69,10 @@ public class CancellationPolicy {
 		change(newStates);
 	}
 
+	/**
+	 * Apply the cancellation window time
+	 * @param minimumHoursBeforeStart 	The int value that the variable will be set to
+	 */
 	public void applyTimeWindowChange(int minimumHoursBeforeStart) {
         if (minimumHoursBeforeStart < 0) {
             throw new IllegalArgumentException("Minimum hours before start must be non-negative.");
@@ -77,6 +81,7 @@ public class CancellationPolicy {
         System.out.println("Cancellation time window changed to " + minimumHoursBeforeStart + " hours before start.");
     }
 }
+
 
 
 
