@@ -12,9 +12,9 @@ public class CancellationPolicyCommand implements PolicyCommand {
 	
 	@Override
 	public boolean update() {
-	     //policy.applyChange(newWindowTime);
 		 policy.applyTimeWindowChange(newWindowTime);
 	     return true;
 	}
 }
+
 
