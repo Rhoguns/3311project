@@ -1,8 +1,4 @@
-// ============================================================
 // CONFIG
-// ============================================================
-// In Docker: nginx proxies /api --> backend:8080/api, so use relative path.
-// For local dev without Docker: set window.API_BASE = 'http://localhost:8080/api' before this script.
 const API = window.API_BASE || '/api';
 
 // Current session state
@@ -125,9 +121,9 @@ async function removeSlot(slotId) {
 }
 
 
-// ============================================================
+
 // ADMIN PAGES
-// ============================================================
+
 async function renderPolicies(el) {
   const p = await apiSafe('/admin/policies')||{};
   el.innerHTML=`
@@ -268,9 +264,7 @@ async function renderAllPayments(el) {
   </div>`;
 }
 
-// ============================================================
 // SHARED ACTIONS
-// ============================================================
 async function viewBooking(id) {
   const b = await apiSafe(`/bookings/${id}`);
   if (!b) return;
@@ -333,9 +327,7 @@ async function rejectConsultant(id) {
   if (r) { toast('Consultant rejected','info'); navigate(session.page); }
 }
 
-// ============================================================
 // TABLE FILTERS
-// ============================================================
 function filterTbl(input, tblId) {
   const q = input.value.toLowerCase();
   const t = document.getElementById(tblId)||input.closest('.card')?.querySelector('table');
@@ -354,9 +346,7 @@ function filterState(sel, tblId) {
   });
 }
 
-// ============================================================
 // INIT
-// ============================================================
 renderNav();
 navigate('dashboard');
 
