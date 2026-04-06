@@ -86,7 +86,9 @@ To stop and delete all data:
 ```bash
 docker-compose down -v
 ```
-
+If it does not work try this 
+Docker Network consists of: Frontend (nginx:80 and index.html) --> Backend (Spring Boot:8080)  --> PostgreSQL DB:5432
+Docker Network interacts with the Groq API (external LLM)
 ---
 
 ## Running Without Docker (Local Dev)
