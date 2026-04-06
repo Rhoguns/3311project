@@ -20,27 +20,8 @@ ConsultHub is a Service Booking & Consulting Platform that connects clients with
 ## Architecture Overview
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                   Docker Network                     │
-│                                                      │
-│  ┌──────────────┐    ┌─────────────────────────┐    │
-│  │   Frontend   │───▶│      Backend (API)       │    │
-│  │  nginx:80    │    │  Spring Boot :8080        │    │
-│  │  index.html  │    │                           │    │
-│  └──────────────┘    │  Wraps Phase 1 Java code  │    │
-│                      │  + REST controllers        │    │
-│                      │  + AI chatbot endpoint     │    │
-│                      └──────────┬────────────────┘    │
-│                                 │                      │
-│                      ┌──────────▼────────────────┐    │
-│                      │   PostgreSQL DB :5432       │    │
-│                      └───────────────────────────┘    │
-└─────────────────────────────────────────────────────┘
-                              │
-                    ┌─────────▼──────────┐
-                    │   Groq API         │
-                    │  (external LLM)    │
-                    └────────────────────┘
+Docker Network consists of: Frontend (nginx:80 and index.html) --> Backend (Spring Boot:8080)  --> PostgreSQL DB:5432
+Docker Network interacts with the Groq API (external LLM)
 ```
 
 ### Phase 1 Code Reuse
