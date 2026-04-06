@@ -31,7 +31,7 @@ All Phase 1 Java classes are preserved unchanged under `backend/src/main/java/co
 - `consultant/` – Consultant, AvailabilitySlot
 - `payment/` – Payment, PaymentMethod + subclasses + State Pattern
 
-The Spring Boot REST controllers wrap these classes directly — **no logic was rewritten**.
+The Spring Boot REST controllers wrap these classes directly.
 
 ---
 
@@ -107,7 +107,7 @@ mvn spring-boot:run
 # Open frontend/index.html in a browser
 # Set API base to localhost for local dev:
 # In browser console: window.API_BASE = 'http://localhost:8080/api'; navigate('dashboard');
-# Or simply open index.html — it defaults to /api which works via Docker nginx
+# Or simply open index.html, it defaults to /api which works via Docker nginx
 ```
 
 For local dev without Docker, open `frontend/index.html` and the app will attempt to hit `localhost:8080/api`.
@@ -201,7 +201,7 @@ See `AI_CHATBOT_DOCUMENTATION.md` for full details.
 
 **Quick setup:**
 1. Add `GROQ_API_KEY=gsk_...` to your `.env` file
-2. The chatbot is accessible from the Client view → "AI Assistant" in the sidebar
+2. The chatbot is accessible from the Client view "AI Assistant" in the sidebar
 3. If no API key is set, a rule-based fallback answers common questions automatically
 
 ---
