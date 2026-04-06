@@ -630,7 +630,7 @@ async function renderChatbot(el) {
       <div class="card-header">
         <div>
           <div class="card-title">🤖 AI Customer Assistant</div>
-          <div class="text-dim text-sm">Powered by Gemini AI · Ask me anything about ConsultHub</div>
+          <div class="text-dim text-sm">Powered by Groq AI · Ask me anything about ConsultHub</div>
         </div>
       </div>
       <div class="chat-container">
