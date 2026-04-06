@@ -1,0 +1,10 @@
+# Java backend
+backend/target/
+**/target/
+
+# Environment files
+.env
+.env.*
+
+# IDE and OS files
+.vscode/
