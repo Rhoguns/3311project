@@ -13,9 +13,8 @@ const session = {
   consultantId: 'c001',
 };
 
-// ============================================================
+
 // CONSULTANT PAGES
-// ============================================================
 async function renderMySchedule(el) {
   const bookings = await apiSafe(`/bookings/consultant/${session.consultantId}`)||[];
   el.innerHTML=`<div class="card">
